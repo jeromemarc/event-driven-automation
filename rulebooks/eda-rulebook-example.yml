@@ -7,5 +7,8 @@
   rules:
     - name: Say Hello
       condition: event.i == 1
-      action:
-        debug:
+      actions:
+        - debug:
+        - run_job_template:
+            name: "[NUC] EDA test" # nombre del template en el Controller no del Playbook
+            organization: "Demo Org"
