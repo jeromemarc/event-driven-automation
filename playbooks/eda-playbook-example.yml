@@ -1,0 +1,9 @@
+---
+- name: EDA playbook example
+  hosts: localhost
+  become: true
+
+  tasks:
+  - name: debug
+    debug:
+      msg: "nombre + {{ ansible_eda.event.meta.source.name }} tipo {{ ansible_eda.event.meta.source.type }}" 
