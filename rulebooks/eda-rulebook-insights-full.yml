@@ -20,3 +20,4 @@
                 insights_adv_type: "{{ event.payload.event_type }}"
                 insights_adv_data: "{{ event.payload.events }}"
                 insights_adv_host_data: "{{ event.event.payload.context }}"
+                insights_adv_target_host: "{{ event.event.payload.context.display_name }}"
