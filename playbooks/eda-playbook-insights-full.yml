@@ -1,6 +1,9 @@
 ---
 - name: EDA | Insights | Show Advisory
   hosts: "{{ insights_adv_target_host }}"
+  vars: 
+    hosts_with_adv: []
+    
   tasks:
 
     - name: Create a list for each host with advisories
