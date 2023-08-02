@@ -1,7 +1,8 @@
 ---
 - name: EDA | Insights | Show Advisory
   hosts: "{{ insights_adv_target_host }}"
-  vars: 
+  vars:
+    insights_api_url: "https://console.redhat.com/api"
     hosts_with_adv: []
 
   tasks:
