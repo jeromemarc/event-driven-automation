@@ -114,6 +114,7 @@
         - cloud == 'azure'
         - ansible_os_family == 'RedHat'
         - ansible_facts['distribution'] == "RedHat"
+      delegate_to: localhost
 
     - name: Run CVE remediation playbook on "{{ dns_name }}"
       ansible.builtin.shell:
@@ -125,6 +126,7 @@
         - ansible_os_family == 'RedHat'
         - ansible_facts['distribution'] == "RedHat"
         - ansible_ssh_private_key_file is defined
+      delegate_to: localhost
 
     - name: Run CVE remediation playbook on "{{ dns_name }}"
       ansible.builtin.shell:
@@ -136,6 +138,7 @@
         - ansible_os_family == 'RedHat'
         - ansible_facts['distribution'] == "RedHat"
         - ansible_password is defined
+      delegate_to: localhost
 
     - name: Run CVE remediation playbook on "{{ dns_name }}"
       ansible.builtin.shell:
@@ -147,3 +150,4 @@
         - ansible_os_family == 'RedHat'
         - ansible_facts['distribution'] == "RedHat"
         - ansible_ssh_private_key_file is defined
+      delegate_to: localhost
