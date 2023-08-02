@@ -56,3 +56,87 @@
       ansible.builtin.debug:
         var: item
       loop: "{{ hosts_with_cve }}"
+
+      - name: Create a list of CVEs
+      ansible.builtin.set_fact:
+        cve_list : "{{ cve_list | default([]) + 'cves' : hosts_with_cve.cves }}"
+      loop: "{{ hosts_with_cve }}"
+
+    - name: Print out the list of CVEs for host "{{ insights_adv_target_host }}"
+      ansible.builtin.debug:
+        var: item
+      loop: "{{ cve_list }}"
+
+  - name: Generate playbooks to remediate vulnerabilities
+    ansible.builtin.uri:
+      url: "{{ insights_api_url }}/remediations/v1/playbook"
+      method: POST
+      user: "{{ insights_auth_user }}"
+      password: "{{ insights_auth_password }}"
+      validate_certs: no
+      force_basic_auth: yes
+      status_code: 200
+      return_content: yes 
+      headers:
+        Content-Type: "application/json"
+        accept: "text/vnd.yaml"
+        Connection: "keep-alive"
+      body_format: json
+      body: "{{ lookup('ansible.builtin.template','templates/pb_generator_body.j2') }}"
+    register: pbs_per_host
+    loop: "{{ cve_list }}"
+
+  - name: print out cves_with_pb
+    ansible.builtin.debug:
+      msg: "{{ item.content }}"
+    loop: "{{ pbs_per_host.results }}"
+
+  - name: Insights | Create playbooks locally
+    ansible.builtin.copy:
+      dest: "{{ playbook_dir }}/{{ item.item.cve_id }}-remediation-{{ item.item.hostname }}.yml"
+      content: "{{ item.content }}"
+      mode: "0755"
+    loop: "{{ pbs_per_host.results }}"
+
+  - name: Run CVE remediation playbook on "{{ dns_name }}"
+    ansible.builtin.shell:
+      cmd: ansible-playbook -i azure_rm.yml -e ansible_user="{{ ansible_user }}" -e ansible_password="{{ ansible_password }}" "{{ playbook_dir }}/{{ item.item.cve_id }}-remediation-{{ item.item.hostname }}.yml"
+    loop: "{{ pbs_per_host.results }}"
+    delegate_to: localhost
+    when: 
+      - cloud == 'azure'
+      - ansible_os_family == 'RedHat'
+      - ansible_facts['distribution'] == "RedHat"
+
+  - name: Run CVE remediation playbook on "{{ dns_name }}"
+    ansible.builtin.shell:
+      cmd: ansible-playbook -i aws_ec2.yml -e ansible_user="{{ ansible_user }}" -e ansible_ssh_private_key_file="{{ ssh_key_data }}" "{{ playbook_dir }}/{{ item.item.cve_id }}-remediation-{{ item.item.hostname }}.yml"
+    loop: "{{ pbs_per_host.results }}"
+    delegate_to: localhost
+    when: 
+      - cloud == 'ec2'
+      - ansible_os_family == 'RedHat'
+      - ansible_facts['distribution'] == "RedHat"
+      - ansible_ssh_private_key_file is defined
+
+  - name: Run CVE remediation playbook on "{{ dns_name }}"
+    ansible.builtin.shell:
+      cmd: ansible-playbook -i aws_ec2.yml -e ansible_user="{{ ansible_user }}" -e ansible_password="{{ ansible_password }}" "{{ playbook_dir }}/{{ item.item.cve_id }}-remediation-{{ item.item.hostname }}.yml"
+    loop: "{{ pbs_per_host.results }}"
+    delegate_to: localhost
+    when: 
+      - cloud == 'ec2'
+      - ansible_os_family == 'RedHat'
+      - ansible_facts['distribution'] == "RedHat"
+      - ansible_password is defined
+
+  - name: Run CVE remediation playbook on "{{ dns_name }}"
+    ansible.builtin.shell:
+      cmd: ansible-playbook -i aws_ec2.yml -e ansible_user="{{ ansible_user }}" -e ansible_ssh_private_key_file="{{ ssh_key_data }}" "{{ playbook_dir }}/{{ item.item.cve_id }}-remediation-{{ item.item.hostname }}.yml"
+    loop: "{{ pbs_per_host.results }}"
+    delegate_to: localhost
+    when: 
+      - cloud == 'ec2'
+      - ansible_os_family == 'RedHat'
+      - ansible_facts['distribution'] == "RedHat"
+      - ansible_ssh_private_key_file is defined
