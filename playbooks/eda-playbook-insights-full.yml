@@ -41,4 +41,4 @@
 
     - name: Display system tags
       debug:
-        var: insights_cves.json.data
+        var: insights_cves
