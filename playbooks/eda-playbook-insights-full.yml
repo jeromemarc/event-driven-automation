@@ -122,14 +122,14 @@
 
     - name: Run CVE remediation playbook on "{{ insights_adv_target_host }}"
       ansible.builtin.shell:
-        cmd: ansible-playbook -i aws_ec2.yml -e ansible_user="{{ ansible_user }}" -e ansible_ssh_private_key_file="{{ ssh_key_data }}" "{{ playbook_dir }}/{{ item.item }}-remediation-{{ insights_adv_host_data.display_name }}.yml"
+        cmd: ansible-playbook -i aws_ec2.yml -e ansible_user="{{ ansible_user }}" -e ansible_ssh_private_key_file="/runner/artifacts/{{ tower_job_id }}/ssh_key_data" "{{ playbook_dir }}/{{ item.item }}-remediation-{{ insights_adv_host_data.display_name }}.yml"
       loop: "{{ pbs_per_host.results }}"
       delegate_to: localhost
       when: 
         - hostvars[inventory_hostname].insights_provider_type == 'aws'
         - ansible_os_family == 'RedHat'
         - ansible_facts['distribution'] == "RedHat"
-        - ssh_key_data is defined
+        - ansible_password is not defined
       delegate_to: localhost
 
     - name: Run CVE remediation playbook on "{{ insights_adv_target_host }}"
