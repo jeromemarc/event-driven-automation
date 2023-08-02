@@ -85,9 +85,9 @@
         # body: "{{ lookup('ansible.builtin.template','templates/pb_generator_body.j2') }}"
         body:
           issues:
-            id: "vulnerabilities:{{ item }}"
-            systems: 
-              - "{{ insights_adv_target_host }}"
+            - id: "vulnerabilities:{{ item }}"
+              systems: 
+                - "{{ insights_adv_target_host }}"
           auto_reboot: true
       register: pbs_per_host
       loop: "{{ cve_list }}"
