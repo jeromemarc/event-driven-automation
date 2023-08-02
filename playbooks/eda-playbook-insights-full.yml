@@ -87,7 +87,7 @@
           issues:
             - id: "vulnerabilities:{{ item }}"
               systems: 
-                - "{{ insights_adv_target_host }}"
+                - "{{ insights_adv_host_data.inventory_id }}"
           auto_reboot: true
       register: pbs_per_host
       loop: "{{ cve_list }}"
