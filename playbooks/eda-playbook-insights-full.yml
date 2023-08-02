@@ -85,7 +85,7 @@
         # body: "{{ lookup('ansible.builtin.template','templates/pb_generator_body.j2') }}"
         body:
           issues:
-            id: "vulnerabilities:{{ item }}",
+            id: "vulnerabilities:{{ item }}"
             systems: 
               - "{{ insights_adv_target_host }}"
           auto_reboot: true
