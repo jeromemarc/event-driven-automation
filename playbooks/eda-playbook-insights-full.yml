@@ -50,6 +50,7 @@
                                         'severity' : item.json.data.attributes.severity,
                                         'description' : item.json.data.attributes.description }] }}"
       loop: "{{ insights_cves.results }}"
+      when: item.json.data.attributes.cves | length > 0
 
     - name: Print out the list of CVEs for host "{{ insights_adv_target_host }}"
       ansible.builtin.debug:
