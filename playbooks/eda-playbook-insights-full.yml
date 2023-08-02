@@ -31,7 +31,7 @@
     - name: Get Insights Tags
       #no_log: true
       uri:
-        url: "{{ insights_api_url }}/advisories/{{ item.advisory_id }}"
+        url: "{{ insights_api_url }}/patch/v3/advisories/{{ item.advisory_id }}"
         method: GET
         return_content: yes
         user: "{{ insights_auth_user }}"
