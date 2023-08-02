@@ -2,9 +2,38 @@
 - name: EDA | Insights | Show Advisory
   hosts: "{{ insights_adv_target_host }}"
   tasks:
+
+    - name: Create a list for each host with advisories
+      ansible.builtin.set_fact:
+        hosts_with_adv: "{{ hosts_with_adv + [{ 'hostname' : insights_adv_host_data.display_name, 
+                                        'insights_id' : insights_adv_host_data.inventory_id,
+                                        'advisory_id' : item.payload.advisory_id,
+                                        'advisory_name' : item.payload.advisory_name,
+                                        'advisory_type' : item.payload.advisory_type }] }}"
+      loop: "{{ insights_adv_data }}"
+
     - name: Debug message
       ansible.builtin.debug:
         msg:
-          - "insights_adv_type: {{ insights_adv_type }}"
-          - "insights_adv_data: {{ insights_adv_data }}"
-          - "insights_adv_host_data: {{ insights_adv_host_data }}"
+          - "hostname: {{ item.hostname }}"
+          - "insights_id: {{ item.insights_id }}"
+          - "advisory_id: {{ item.advisory_id }}"
+          - "advisory_name: {{ item.advisory_name }}"
+          - "advisory_type:  {{ item.advisory_type }}"
+      loop: "{{ hosts_with_adv }}"
+
+    - name: Get Insights Tags
+      no_log: true
+      uri:
+        url: "{{ insights_api_url }}/inventory/v1/hosts/{{ host_id }}/tags"
+        method: GET
+        return_content: yes
+        user: "{{ insights_auth_user }}"
+        password: "{{ insights_auth_password }}"
+        force_basic_auth: yes
+        status_code: 200
+      register: insights_tags
+
+    - name: Display system tags
+      debug:
+        var: insights_tags.json.results
