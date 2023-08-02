@@ -103,6 +103,7 @@
         content: "{{ item.content }}"
         mode: "0755"
       loop: "{{ pbs_per_host.results }}"
+      delegate_to: localhost
 
     - name: Run CVE remediation playbook on "{{ dns_name }}"
       ansible.builtin.shell:
