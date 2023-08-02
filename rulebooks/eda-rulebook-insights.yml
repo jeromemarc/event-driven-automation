@@ -8,16 +8,16 @@
         token: redhatinsightstoken
 
   rules:
-    - name: EDA | Insights | Detect and remediate recommendation event from Insights
-      condition: event.payload.event_type == "new-recommendation"
-      actions:
-        - debug:
-        - run_job_template:
-            name: "[EDA] Insights remediate SSH root login"
-            organization: Default
-            job_args:
-              extra_vars:
-                insights_recommendation: "{{ event.payload.events.0.payload.rule_id }}"
+#    - name: EDA | Insights | Detect and remediate recommendation event from Insights
+#      condition: event.payload.event_type == "new-recommendation"
+#      actions:
+#        - run_job_template:
+#        - debug:
+#            name: "[EDA] Insights remediate SSH root login"
+#            organization: Default
+#              extra_vars:
+#            job_args:
+#                insights_recommendation: "{{ event.payload.events.0.payload.rule_id }}"
 
     - name: EDA | Insights | Detect remediation
       condition: event.payload is defined # .event_type == "resolved-recommendation"
