@@ -8,8 +8,8 @@
 
   tasks:
     - name: Print all vars
-      debug:
-        var: vars
+      shell: env
+
         
     - name: Create a list for each host with advisories
       ansible.builtin.set_fact:
