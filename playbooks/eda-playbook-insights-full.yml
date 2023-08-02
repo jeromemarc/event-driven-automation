@@ -5,13 +5,12 @@
     insights_api_url: "https://console.redhat.com/api"
     insights_auth_user: "{{ rhsm_username }}"
     insights_auth_password: "{{ rhsm_password  }}"
-    hosts_with_adv: []
 
   tasks:
 
     - name: Create a list for each host with advisories
       ansible.builtin.set_fact:
-        hosts_with_adv: "{{ hosts_with_adv + [{ 'hostname' : insights_adv_host_data.display_name, 
+        hosts_with_adv: "{{ hosts_with_adv | default([]) + [{ 'hostname' : insights_adv_host_data.display_name, 
                                         'insights_id' : insights_adv_host_data.inventory_id,
                                         'advisory_id' : item.payload.advisory_id,
                                         'advisory_name' : item.payload.advisory_name,
@@ -43,7 +42,7 @@
 
     - name: Create a list for each host with CVEs
       ansible.builtin.set_fact:
-        hosts_with_cve: "{{ hosts_with_cve + [{ 'hostname' : insights_adv_host_data.display_name, 
+        hosts_with_cve: "{{ hosts_with_cve | default([]) + [{ 'hostname' : insights_adv_host_data.display_name, 
                                         'insights_id' : insights_adv_host_data.inventory_id,
                                         'advisory_id' : item.json.data.id,
                                         'cves' : item.json.data.attributes.cves, 
