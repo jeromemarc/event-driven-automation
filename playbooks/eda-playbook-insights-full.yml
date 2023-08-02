@@ -1,0 +1,10 @@
+---
+- name: EDA | Insights | Show Advisory
+  hosts: localhost
+  tasks:
+    - name: Debug message
+      ansible.builtin.debug:
+        msg:
+          - "insights_adv_type: {{ insights_adv_type }}"
+          - "insights_adv_data: {{ insights_adv_data }}"
+          - "insights_adv_host_data: {{ insights_adv_host_data }}"

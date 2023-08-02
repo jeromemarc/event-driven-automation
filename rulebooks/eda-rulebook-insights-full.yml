@@ -1,0 +1,22 @@
+---
+- name: EDA | Insights | Listen for events on a webhook
+  hosts: localhost
+  sources:
+    - redhatinsights.eda.insights:
+        host: 0.0.0.0
+        port: 5002
+        token: redhatinsightstoken
+
+  rules:
+    - name: EDA | Insights | Remediate Red Hat Insights Advisory with Ansible
+      condition: event.payload is defined and event.payload.event_type == 'new-advisory'
+      actions:
+        - debug:
+        - run_job_template:
+            name: "[EDA] Insights Advisory playbook"
+            organization: Default
+            job_args:
+              extra_vars:
+                insights_adv_type: "{{ event.payload.event_type }}"
+                insights_adv_data: "{{ event.payload.events }}"
+                insights_adv_host_data: "{{ event.event.payload.context }}"
