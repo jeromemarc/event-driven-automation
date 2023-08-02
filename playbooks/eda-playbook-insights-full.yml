@@ -3,6 +3,8 @@
   hosts: "{{ insights_adv_target_host }}"
   vars:
     insights_api_url: "https://console.redhat.com/api"
+    insights_auth_user: "{{ rhsm_username }}"
+    insights_auth_password: "{{ rhsm_password  }}"
     hosts_with_adv: []
 
   tasks:
