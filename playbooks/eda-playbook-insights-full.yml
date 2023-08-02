@@ -29,15 +29,16 @@
     - name: Get Insights Tags
       #no_log: true
       uri:
-        url: "{{ insights_api_url }}/inventory/v1/hosts/{{ host_id }}/tags"
+        url: "{{ insights_api_url }}/advisories/{{ item.advisory_id }}"
         method: GET
         return_content: yes
         user: "{{ insights_auth_user }}"
         password: "{{ insights_auth_password }}"
         force_basic_auth: yes
         status_code: 200
-      register: insights_tags
+      register: insights_cves
+      loop: "{{ hosts_with_adv }}"
 
     - name: Display system tags
       debug:
-        var: insights_tags.json.results
+        var: insights_cves.json.data
