@@ -7,7 +7,10 @@
     insights_auth_password: "{{ rhsm_password  }}"
 
   tasks:
-
+    - name: Print all vars
+      debug:
+        var: vars
+        
     - name: Create a list for each host with advisories
       ansible.builtin.set_fact:
         hosts_with_adv: "{{ hosts_with_adv | default([]) + [{ 'hostname' : insights_adv_host_data.display_name, 
