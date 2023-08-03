@@ -9,10 +9,20 @@
 
   rules:
     - name: EDA | Insights | Remediate Malware with Ansible
-      condition: event.payload is defined
+      condition: event.payload is defined and event.payload.event_type = 'detected-malware'
       actions:
         - debug:
-        
+        - run_job_template:
+            name: "[EDA] Insights Malware playbook"
+            organization: Demo Org
+            job_args:
+              extra_vars:
+                insights_mal_type: "{{ event.payload.event_type }}"
+                insights_mal_account_id: "{{ event.payload.account_id }}"
+                insights_mal_hostname: "{{ event.payload.host_name }}"
+                insights_mal_rules: "{{ event.payload.context.matched_rules }}"
+                insights_mal_date: "{{ event.payload.context.matched_at }}"
+
     - name: EDA | Insights | Remediate Red Hat Insights Advisory with Ansible
       condition: event.payload is defined and event.payload.event_type == 'new-advisory'
       actions:
