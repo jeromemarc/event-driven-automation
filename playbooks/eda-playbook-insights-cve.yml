@@ -39,20 +39,20 @@
       register: insights_cves
       loop: "{{ hosts_with_adv }}"
     
+    - name: Create a list for each host with CVEs
+      ansible.builtin.set_fact:
+        hosts_with_cve: "{{ hosts_with_cve | default([]) + [{ 'hostname' : insights_adv_host_data.display_name, 
+                                        'insights_id' : insights_adv_host_data.inventory_id,
+                                        'advisory_id' : item.json.data.id,
+                                        'cves' : item.json.data.attributes.cves, 
+                                        'advisory_type_name' : item.json.data.attributes.advisory_type_name,
+                                        'severity' : item.json.data.attributes.severity,
+                                        'description' : item.json.data.attributes.description }] }}"
+      loop: "{{ insights_cves.results }}"
+      when: item.json.data.attributes.cves | length > 0
+
+    # Block to create a list of CVEs if they exist
     - block:
-    # Block to list and resolve CVEs if they exist
-
-      - name: Create a list for each host with CVEs
-        ansible.builtin.set_fact:
-          hosts_with_cve: "{{ hosts_with_cve | default([]) + [{ 'hostname' : insights_adv_host_data.display_name, 
-                                          'insights_id' : insights_adv_host_data.inventory_id,
-                                          'advisory_id' : item.json.data.id,
-                                          'cves' : item.json.data.attributes.cves, 
-                                          'advisory_type_name' : item.json.data.attributes.advisory_type_name,
-                                          'severity' : item.json.data.attributes.severity,
-                                          'description' : item.json.data.attributes.description }] }}"
-        loop: "{{ insights_cves.results }}"
-
       - name: Print out the list of CVEs for host "{{ insights_adv_target_host }}"
         ansible.builtin.debug:
           var: item
@@ -132,4 +132,4 @@
           - ansible_password is defined
         delegate_to: localhost
       #block closure
-      when: item.json.data.attributes.cves | length > 0
+      when: hosts_with_cve is defined
