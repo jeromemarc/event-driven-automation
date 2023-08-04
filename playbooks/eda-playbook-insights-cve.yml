@@ -63,8 +63,8 @@
           cve_list : "{{ cve_list | default([]) + item.cves }}"
         loop: "{{ hosts_with_cve }}"
         when:
-          - hosts_with_cve.severity >= '3'
-          - hosts_with_cve.advisory_type == 'security'
+          - item.severity >= '3'
+          - item.advisory_type == 'security'
 
       - name: Print out the list of security CVEs with severity >= 3 for host "{{ insights_adv_target_host }}"
         ansible.builtin.debug:
