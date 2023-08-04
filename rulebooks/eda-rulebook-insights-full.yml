@@ -9,7 +9,7 @@
 
   rules:
     - name: EDA | Insights | Remediate Malware with Ansible
-      condition: event.payload is defined and event.payload.event_type = 'detected-malware'
+      condition: event.payload is defined and event.payload.event_type == 'detected-malware'
       actions:
         - debug:
         - run_job_template:
