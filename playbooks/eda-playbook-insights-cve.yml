@@ -53,10 +53,10 @@
 
     # Block to create a list of CVEs if they exist
     - block:
-      - name: Print out the list of CVEs for host "{{ insights_adv_target_host }}"
-        ansible.builtin.debug:
-          var: item
-        loop: "{{ hosts_with_cve }}"
+#      - name: Print out the list of CVEs for host "{{ insights_adv_target_host }}"
+#        ansible.builtin.debug:
+#          var: item
+#        loop: "{{ hosts_with_cve }}"
 
       - name: Create a list of security CVEs with severity >= 3
         ansible.builtin.set_fact:
@@ -73,7 +73,7 @@
 
       - name: Print out the total number of security CVEs with severity >= 3 for host "{{ insights_adv_target_host }}"
         ansible.builtin.debug:
-          msg: "Detected a total of {{ cve_list | length }} security CVEs with severity >= 3 for host {{ insights_adv_target_host }}"
+          msg: "Detected a total of {{ cve_list | length }} security CVEs with severity >= 3 of a total of {{ hosts_with_cve }} detected for host {{ insights_adv_target_host }}"
         loop: "{{ cve_list }}"
 
       - name: Notificar Slack
