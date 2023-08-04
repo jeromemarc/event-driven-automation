@@ -58,12 +58,15 @@
           var: item
         loop: "{{ hosts_with_cve }}"
 
-      - name: Create a list of CVEs
+      - name: Create a list of security CVEs with severity >= 3
         ansible.builtin.set_fact:
           cve_list : "{{ cve_list | default([]) + item.cves }}"
         loop: "{{ hosts_with_cve }}"
+        when:
+          - hosts_with_cve.severity >= '3'
+          - hosts_with_cve.advisory_type == 'security'
 
-      - name: Print out the list of CVEs for host "{{ insights_adv_target_host }}"
+      - name: Print out the list of security CVEs with severity >= 3 for host "{{ insights_adv_target_host }}"
         ansible.builtin.debug:
           var: item
         loop: "{{ cve_list }}"
