@@ -68,6 +68,22 @@
           var: item
         loop: "{{ cve_list }}"
 
+      - name: Notificar Slack
+        community.general.slack:
+          token: T04RP428ZBQ/B04RW4Z11DL/Xow5ljlHZliYA2uSgjVAeLwR
+          msg: 'CVE {{ item }} detected on host {{ insights_adv_target_host }}.'
+          channel: '#insights'
+        loop: "{{ cve_list }}"
+            
+      - name: Notificar Telegram
+        community.general.telegram:
+          token: '1024279922:AAHSx-S_PC0vkjdG1-CqR5RxSIdma1sbZTM'
+          api_args:
+            chat_id: 11394314
+            parse_mode: "html"
+            text: "CVE {{ item }} detected on host {{ insights_adv_target_host }}."
+        loop: "{{ cve_list }}"
+
       - name: Generate playbooks to remediate vulnerabilities
         ansible.builtin.uri:
           url: "{{ insights_api_url }}/remediations/v1/playbook"
@@ -131,5 +147,34 @@
           - ansible_facts['distribution'] == "RedHat"
           - ansible_password is defined
         delegate_to: localhost
+
+      - name: Notificar Slack
+        community.general.slack:
+          token: T04RP428ZBQ/B04RW4Z11DL/Xow5ljlHZliYA2uSgjVAeLwR
+          msg: 'CVE {{ item.item }} resolved on host {{ insights_adv_target_host }}.'
+          channel: '#insights'
+        loop: "{{ pbs_per_host.results }}"
+        when: 
+          - hostvars[inventory_hostname].insights_provider_type == 'aws'
+          - ansible_os_family == 'RedHat'
+          - ansible_facts['distribution'] == "RedHat"
+          - ansible_password is defined
+        delegate_to: localhost
+            
+      - name: Notificar Telegram
+        community.general.telegram:
+          token: '1024279922:AAHSx-S_PC0vkjdG1-CqR5RxSIdma1sbZTM'
+          api_args:
+            chat_id: 11394314
+            parse_mode: "html"
+            text: "CVE {{ item.item }} resolved on host {{ insights_adv_target_host }}."
+        loop: "{{ pbs_per_host.results }}"
+        when: 
+          - hostvars[inventory_hostname].insights_provider_type == 'aws'
+          - ansible_os_family == 'RedHat'
+          - ansible_facts['distribution'] == "RedHat"
+          - ansible_password is defined
+        delegate_to: localhost
+
       #block closure
       when: hosts_with_cve is defined
