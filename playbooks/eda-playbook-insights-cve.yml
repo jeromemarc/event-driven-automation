@@ -66,9 +66,14 @@
           - item.severity | int >= 3
           - item.advisory_type_name == 'security'
 
-      - name: Print out the list of security CVEs with severity >= 3 for host "{{ insights_adv_target_host }}"
+#      - name: Print out the list of security CVEs with severity >= 3 for host "{{ insights_adv_target_host }}"
+#        ansible.builtin.debug:
+#          var: item
+#        loop: "{{ cve_list }}"
+
+      - name: Print out the total number of security CVEs with severity >= 3 for host "{{ insights_adv_target_host }}"
         ansible.builtin.debug:
-          var: item
+          msg: "Detected a total of {{ cve_list | length }} security CVEs with severity >= 3 for host {{ insights_adv_target_host }}"
         loop: "{{ cve_list }}"
 
       - name: Notificar Slack
