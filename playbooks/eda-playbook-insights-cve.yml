@@ -79,9 +79,10 @@
       - name: Notificar Slack
         community.general.slack:
           token: T04RP428ZBQ/B04RW4Z11DL/Xow5ljlHZliYA2uSgjVAeLwR
-          msg: 'CVE {{ item }} detected on host {{ insights_adv_target_host }}.'
+          #msg: 'CVE {{ item }} detected on host {{ insights_adv_target_host }}.'
+          msg: "Detected {{ cve_list|length }} CVEs on host {{ insights_adv_target_host }}."
           channel: '#insights'
-        loop: "{{ cve_list }}"
+        #loop: "{{ cve_list }}"
             
       - name: Notificar Telegram
         community.general.telegram:
@@ -89,8 +90,9 @@
           api_args:
             chat_id: 11394314
             parse_mode: "html"
-            text: "CVE {{ item }} detected on host {{ insights_adv_target_host }}."
-        loop: "{{ cve_list }}"
+            #text: "CVE {{ item }} detected on host {{ insights_adv_target_host }}."
+            text: "Detected {{ cve_list|length }} CVEs on host {{ insights_adv_target_host }}."
+        #loop: "{{ cve_list }}"
 
       - name: Generate playbooks to remediate vulnerabilities
         ansible.builtin.uri:
