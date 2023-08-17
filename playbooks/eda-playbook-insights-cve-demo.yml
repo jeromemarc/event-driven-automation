@@ -27,7 +27,7 @@
 #      loop: "{{ hosts_with_adv }}"
 
     - name: Create a list of advisories
-      #no_log: true
+      no_log: true
       uri:
         url: "{{ insights_api_url }}/patch/v3/advisories/{{ item.advisory_name }}"
         method: GET
