@@ -111,7 +111,7 @@
           body_format: json
           body: "{{ lookup('ansible.builtin.template','templates/pb_generator_body.j2') }}"
         register: pbs_per_host
-        loop: "{{ cve_list }}"
+        loop: "{{ cve_list | first | list }}"
 
       - name: print out cves_with_pb
         ansible.builtin.debug:
