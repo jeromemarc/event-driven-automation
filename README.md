@@ -130,3 +130,11 @@ You can then run the two playbooks to complete the configuration.
 
     ansible-playbook configure-aap-controller.yml
     ansible-playbook configure-eda-controller.yml
+
+### Decision Environment
+
+Decision environments are a container image to run Ansible rulebooks. They create a common language for communicating automation dependencies, and provide a standard way to build and distribute the automation environment. The default decision environment is found in the Ansible-Rulebook. 
+
+You can create your own decision environment to use with EDA. More information can be found in the official [documentation](https://access.redhat.com/documentation/en-us/red_hat_ansible_automation_platform/2.4/html/event-driven_ansible_controller_user_guide/eda-decision-environments).
+
+This demo uses a custom DE, you can learn more about it at [kubealex' gh](https://github.com/kubealex/eda-decision-environment).
