@@ -100,37 +100,6 @@ Once your objects are in place, you can go to **Views -> Rulebook Activations **
 
 ![Events history](./files/eda_history_events.png)
 
-Alternatively, you can use the [configure-controller-token playbook](./eda-controller-setup/configure-controller-token.yml)
-
-To configure the predefined project, credentials and templates, you can use the playbooks located in the [eda-controller-setup directory](./eda-controller-setup/).
-
-The *configure-aap-controller* playbook, requires an ansible-galaxy configuration that allows accessing [Red Hat Automation Hub](https://access.redhat.com/documentation/en-us/red_hat_ansible_automation_platform/2.4/html-single/getting_started_with_automation_hub/index)
-
-First, install the requirements:
-
-    ansible-galaxy install -r requirements.yml
-
-Tune up the [eda-vars.yml file](./eda-controller-setup/eda-vars.yml) to match your setup, the relevant settings (and self-explanatory) are:
-
-    aap2_controller_host:
-    aap2_controller_username:
-    aap2_controller_password:
-
-    eda_controller_url:
-    eda_controller_user:
-    eda_controller_password:
-
-    servicenow_instance_url:
-    servicenow_instance_user:
-    servicenow_instance_password:
-
-These variables will be used to configure both the AAP2 Controller and the EDA Controller.
-
-You can then run the two playbooks to complete the configuration.
-
-    ansible-playbook configure-aap-controller.yml
-    ansible-playbook configure-eda-controller.yml
-
 ### Decision Environment
 
 Decision environments are a container image to run Ansible rulebooks. They create a common language for communicating automation dependencies, and provide a standard way to build and distribute the automation environment. The default decision environment is found in the Ansible-Rulebook. 

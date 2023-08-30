@@ -1,2 +1,0 @@
-localhost ansible_connection=local
-rhel9-vm.rh-lab.labs
