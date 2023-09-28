@@ -62,9 +62,9 @@
         cve_list : "{{ cve_list | default([]) + item.cves }}"
       loop: "{{ hosts_with_cve }}"
       when:
+        - hosts_with_cve is defined      
         - item.severity | int >= 3
         - item.advisory_type_name == 'security'
-        - hosts_with_cve is defined
 
 # If there are in fact any CVEs that are security and with a severity >= 3
     - block:
