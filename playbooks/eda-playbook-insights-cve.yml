@@ -66,6 +66,21 @@
         - item.severity | int >= 3
         - item.advisory_type_name == 'security'
 
+    - block:
+      - name: Notificar Slack
+        community.general.slack:
+          token: T04RP428ZBQ/B04RW4Z11DL/Xow5ljlHZliYA2uSgjVAeLwR
+          msg: "No security CVEs with severity equal or major than 3 on host {{ insights_adv_target_host }}."
+          channel: '#insights'
+            
+      - name: Notificar Telegram
+        community.general.telegram:
+          token: '1024279922:AAHSx-S_PC0vkjdG1-CqR5RxSIdma1sbZTM'
+          api_args:
+            chat_id: 11394314
+            parse_mode: "html"
+            text: "No security CVEs with severity equal or major than 3 on host {{ insights_adv_target_host }}."
+
 # If there are in fact any CVEs that are security and with a severity >= 3
     - block:
       - name: Print out the total number of security CVEs with severity >= 3 for host "{{ insights_adv_target_host }}"
