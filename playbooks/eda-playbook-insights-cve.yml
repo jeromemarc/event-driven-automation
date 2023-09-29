@@ -16,15 +16,17 @@
                                         'advisory_type' : item.payload.advisory_type }] }}"
       loop: "{{ insights_adv_data }}"
 
-#    - name: Debug message
-#      ansible.builtin.debug:
-#        msg:
-#          - "hostname: {{ item.hostname }}"
-#          - "insights_id: {{ item.insights_id }}"
+    - name: Debug message
+      ansible.builtin.debug:
+        msg:
+          - "Analyzing host..."
+          - "hostname: {{ item.hostname }}"
+          - "insights_id: {{ item.insights_id }}"
+          - "RHEL version: {{ hostsvars[item].ansible_distribution }} {{ hostsvars[item].ansible_distribution_version }}"
 #          - "advisory_id: {{ item.advisory_id }}"
 #          - "advisory_name: {{ item.advisory_name }}"
 #          - "advisory_type:  {{ item.advisory_type }}"
-#      loop: "{{ hosts_with_adv }}"
+      loop: "{{ hosts_with_adv }}"
 
     - name: Create a list of advisories
       no_log: true
