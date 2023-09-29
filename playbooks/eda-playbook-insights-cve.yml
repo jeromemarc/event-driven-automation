@@ -26,7 +26,7 @@
 #          - "advisory_id: {{ item.advisory_id }}"
 #          - "advisory_name: {{ item.advisory_name }}"
 #          - "advisory_type:  {{ item.advisory_type }}"
-      loop: "{{ hosts_with_adv }}"
+#      loop: "{{ hosts_with_adv }}"
 
     - name: Create a list of advisories
       no_log: true
