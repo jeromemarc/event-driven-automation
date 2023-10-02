@@ -82,6 +82,8 @@
             chat_id: 11394314
             parse_mode: "html"
             text: "No security CVEs with severity equal or major than 3 on host {{ insights_adv_target_host }}."
+      when: 
+      - hosts_with_cve is not defined
 
 # If there are in fact any CVEs that are security and with a severity >= 3
     - block:
