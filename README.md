@@ -107,3 +107,9 @@ Decision environments are a container image to run Ansible rulebooks. They creat
 You can create your own decision environment to use with EDA. More information can be found in the official [documentation](https://access.redhat.com/documentation/en-us/red_hat_ansible_automation_platform/2.4/html/event-driven_ansible_controller_user_guide/eda-decision-environments).
 
 This demo uses a custom DE, you can learn more about it at [kubealex' gh](https://github.com/kubealex/eda-decision-environment).
+
+### Disclaimer
+
+This repository contains code that is experimental and not fully tested. It is provided as-is, without any warranties or guarantees of functionality, security, or fitness for any purpose. Do not use this code in production environments or for customer-facing applications.
+
+Use at your own risk. The maintainers are not responsible for any damages, data loss, or security issues that may arise from using this code.
