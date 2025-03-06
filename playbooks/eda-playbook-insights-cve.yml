@@ -68,22 +68,22 @@
         - item.severity | int >= 3
         - item.advisory_type_name == 'security'
 
-    - block:
-      - name: Notificar Slack
-        community.general.slack:
-          token: T04RP428ZBQ/B04RW4Z11DL/Xow5ljlHZliYA2uSgjVAeLwR
-          msg: "No security CVEs with severity equal or major than 3 on host {{ insights_adv_target_host }}."
-          channel: '#insights'
-            
-      - name: Notificar Telegram
-        community.general.telegram:
-          token: '1024279922:AAHSx-S_PC0vkjdG1-CqR5RxSIdma1sbZTM'
-          api_args:
-            chat_id: 11394314
-            parse_mode: "html"
-            text: "No security CVEs with severity equal or major than 3 on host {{ insights_adv_target_host }}."
-      when: 
-      - hosts_with_cve is not defined
+#    - block:
+#      - name: Notificar Slack
+#        community.general.slack:
+#          token: T04RP428ZBQ/B04RW4Z11DL/Xow5ljlHZliYA2uSgjVAeLwR
+#          msg: "No security CVEs with severity equal or major than 3 on host {{ insights_adv_target_host }}."
+#          channel: '#insights'
+#            
+#      - name: Notificar Telegram
+#        community.general.telegram:
+#          token: '1024279922:AAHSx-S_PC0vkjdG1-CqR5RxSIdma1sbZTM'
+#          api_args:
+#            chat_id: 11394314
+#            parse_mode: "html"
+#            text: "No security CVEs with severity equal or major than 3 on host {{ insights_adv_target_host }}."
+#      when: 
+#      - hosts_with_cve is not defined
 
 # If there are in fact any CVEs that are security and with a severity >= 3
     - block:
@@ -92,23 +92,23 @@
           msg: "Detected a total of {{ cve_list | length }} security CVEs with severity >= 3 of a total of {{ hosts_with_cve }} detected for host {{ insights_adv_target_host }}"
         loop: "{{ cve_list }}"
 
-      - name: Notificar Slack
-        community.general.slack:
-          token: T04RP428ZBQ/B04RW4Z11DL/Xow5ljlHZliYA2uSgjVAeLwR
-          #msg: 'CVE {{ item }} detected on host {{ insights_adv_target_host }}.'
-          msg: "Detected {{ cve_list | length }} CVEs on host {{ insights_adv_target_host }}."
-          channel: '#insights'
-        #loop: "{{ cve_list }}"
+#      - name: Notificar Slack
+#        community.general.slack:
+#          token: T04RP428ZBQ/B04RW4Z11DL/Xow5ljlHZliYA2uSgjVAeLwR
+#          #msg: 'CVE {{ item }} detected on host {{ insights_adv_target_host }}.'
+#          msg: "Detected {{ cve_list | length }} CVEs on host {{ insights_adv_target_host }}."
+#          channel: '#insights'
+#        #loop: "{{ cve_list }}"
             
-      - name: Notificar Telegram
-        community.general.telegram:
-          token: '1024279922:AAHSx-S_PC0vkjdG1-CqR5RxSIdma1sbZTM'
-          api_args:
-            chat_id: 11394314
-            parse_mode: "html"
-            #text: "CVE {{ item }} detected on host {{ insights_adv_target_host }}."
-            text: "Detected {{ cve_list | length }} CVEs on host {{ insights_adv_target_host }}."
-        #loop: "{{ cve_list }}"
+#      - name: Notificar Telegram
+#        community.general.telegram:
+#          token: '1024279922:AAHSx-S_PC0vkjdG1-CqR5RxSIdma1sbZTM'
+#          api_args:
+#            chat_id: 11394314
+#            parse_mode: "html"
+#            #text: "CVE {{ item }} detected on host {{ insights_adv_target_host }}."
+#            text: "Detected {{ cve_list | length }} CVEs on host {{ insights_adv_target_host }}."
+#        #loop: "{{ cve_list }}"
 
       - name: Generate playbooks to remediate vulnerabilities
         ansible.builtin.uri:
@@ -174,33 +174,33 @@
           - ansible_password is defined
         delegate_to: localhost
 
-      - name: Notificar Slack
-        community.general.slack:
-          token: T04RP428ZBQ/B04RW4Z11DL/Xow5ljlHZliYA2uSgjVAeLwR
-          msg: 'CVE {{ item.item }} resolved on host {{ insights_adv_target_host }}.'
-          channel: '#insights'
-        loop: "{{ pbs_per_host.results }}"
-        when: 
-          - hostvars[inventory_hostname].insights_provider_type == 'aws'
-          - ansible_os_family == 'RedHat'
-          - ansible_facts['distribution'] == "RedHat"
-          - ansible_password is defined
-        delegate_to: localhost
+#      - name: Notificar Slack
+#        community.general.slack:
+#          token: T04RP428ZBQ/B04RW4Z11DL/Xow5ljlHZliYA2uSgjVAeLwR
+#          msg: 'CVE {{ item.item }} resolved on host {{ insights_adv_target_host }}.'
+#          channel: '#insights'
+#        loop: "{{ pbs_per_host.results }}"
+#        when: 
+#          - hostvars[inventory_hostname].insights_provider_type == 'aws'
+#          - ansible_os_family == 'RedHat'
+#          - ansible_facts['distribution'] == "RedHat"
+#          - ansible_password is defined
+#        delegate_to: localhost
             
-      - name: Notificar Telegram
-        community.general.telegram:
-          token: '1024279922:AAHSx-S_PC0vkjdG1-CqR5RxSIdma1sbZTM'
-          api_args:
-            chat_id: 11394314
-            parse_mode: "html"
-            text: "CVE {{ item.item }} resolved on host {{ insights_adv_target_host }}."
-        loop: "{{ pbs_per_host.results }}"
-        when: 
-          - hostvars[inventory_hostname].insights_provider_type == 'aws'
-          - ansible_os_family == 'RedHat'
-          - ansible_facts['distribution'] == "RedHat"
-          - ansible_password is defined
-        delegate_to: localhost
+#      - name: Notificar Telegram
+#        community.general.telegram:
+#          token: '1024279922:AAHSx-S_PC0vkjdG1-CqR5RxSIdma1sbZTM'
+#          api_args:
+#            chat_id: 11394314
+#            parse_mode: "html"
+#            text: "CVE {{ item.item }} resolved on host {{ insights_adv_target_host }}."
+#        loop: "{{ pbs_per_host.results }}"
+#        when: 
+#          - hostvars[inventory_hostname].insights_provider_type == 'aws'
+#          - ansible_os_family == 'RedHat'
+#          - ansible_facts['distribution'] == "RedHat"
+#          - ansible_password is defined
+#        delegate_to: localhost
 
       when: 
       - cve_list is defined
