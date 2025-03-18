@@ -18,6 +18,20 @@
               extra_vars:
                 insights_mal_data: "{{ event.payload.events }}"
 
+    - name: EDA | Insights | New system registered
+      condition: event.payload is defined and event.payload.event_type == 'new-system-registered'
+      actions:
+        - debug:
+        - run_job_template:
+            name: "[EDA] Insights New system playbook"
+            organization: "{{ organization | default('Default') }}"
+            job_args:
+              extra_vars:
+                insights_event_type: "{{ event.payload.event_type }}"
+                insights_event_data: "{{ event.payload.events }}"
+                insights_event_host_data: "{{ event.payload.context }}"
+                insights_event_target_host: "{{ event.payload.context.display_name }}"
+                
     - name: EDA | Insights | Remediate Red Hat Insights Advisory with Ansible
       condition: event.payload is defined and event.payload.event_type == 'new-advisory'
       actions:
