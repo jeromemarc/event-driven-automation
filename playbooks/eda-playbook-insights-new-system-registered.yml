@@ -1,0 +1,19 @@
+---
+- name: EDA | Insights | New System Registered
+  hosts: localhost
+  vars:
+    insights_api_url: "https://console.redhat.com/api"
+    insights_auth_user: "{{ rhsm_username }}"
+    insights_auth_password: "{{ rhsm_password  }}"
+
+  tasks:        
+    - name: Get list of advisories for host
+      uri:
+        url: "{{ insights_api_url }}/patch/v3/export/systems/{{ insights_event_target_host }}/advisories&filter[advisory_type_name]=security"
+        method: GET
+        return_content: yes
+        user: "{{ insights_auth_user }}"
+        password: "{{ insights_auth_password }}"
+        force_basic_auth: yes
+        status_code: 200
+      register: host_advisories
