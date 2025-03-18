@@ -22,13 +22,13 @@
         status_code: 200
       register: affected_hosts
 
-#    - name: Print the no of affected hosts
-#      debug:
-#        msg: "Found {{ affected_hosts.content | from_json | length }} affected hosts for advisory {{ advisory_id }}"
+    - name: Print the no of affected hosts
+      debug:
+        msg: "Found {{ affected_hosts.content | from_json | length }} affected hosts for advisory {{ advisory_id }}"
 
-#    - name: Print the affected hosts
-#      debug:
-#        msg: "{{ affected_hosts.content }}"
+    - name: Print the affected hosts
+      debug:
+        msg: "{{ affected_hosts.content }}"
 
     - name: Generate remediation for affected hosts
       uri:
@@ -53,3 +53,4 @@
       vars:
         advisory_id: "{{ advisory_id }}"
         host_uuids: "{{ affected_hosts.content | from_json | map(attribute='id') | list }}"
+      when: affected_hosts.content is defined and affected_hosts.content | from_json | length > 0

@@ -22,13 +22,13 @@
         status_code: 200
       register: host_advisories
 
-#    - name: Print the no of security advisories
-#      debug:
-#        msg: "Found {{ host_advisories.content | from_json | length }} security advisories for {{ insights_event_target_host }}"
+    - name: Print the no of security advisories
+      debug:
+        msg: "Found {{ host_advisories.content | from_json | length }} security advisories for {{ insights_event_target_host }}"
 
-#    - name: Print the security advisories
-#      debug:
-#        var: host_advisories.content
+    - name: Print the security advisories
+      debug:
+        var: host_advisories.content
 
     - name: Generate remediation for target host
       uri:
@@ -53,3 +53,4 @@
       vars:
         host_advisory_ids: "{{ host_advisories.content | from_json | map(attribute='id') | list }}"
         host_uuid: "{{ insights_event_target_host }}"
+      when: host_advisories.content is defined and host_advisories.content | from_json | length > 0
