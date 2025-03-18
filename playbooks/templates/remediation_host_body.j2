@@ -1,0 +1,10 @@
+{
+  "issues": [
+    {% for advisory_id in host_advisory_ids %}
+    {
+      "id": "patch-advisory:{{ advisory_id }}",
+      "systems": ["{{ host_uuid }}"]
+    }{% if not loop.last %},{% endif %}
+    {% endfor %}
+  ]
+}

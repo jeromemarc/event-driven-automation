@@ -1,5 +1,5 @@
 ---
-- name: EDA | Insights | New System Registered
+- name: EDA | Insights | New Advisory
   hosts: localhost
   gather_facts: no
   vars:
@@ -8,9 +8,9 @@
     insights_auth_password: "{{ rhsm_password }}"
 
   tasks:        
-    - name: Fetch security advisories for target host
+    - name: Get list of affected hosts
       uri:
-        url: "{{ insights_api_url }}/patch/v3/export/systems/{{ insights_event_target_host }}/advisories?filter[advisory_type_name]=security"
+        url: "{{ insights_api_url }}/patch/v3/export/advisories/{{ advisory_id }}/systems"
         method: GET
         return_content: yes
         headers:
@@ -20,17 +20,17 @@
         force_basic_auth: yes
         validate_certs: yes
         status_code: 200
-      register: host_advisories
+      register: affected_hosts
 
-#    - name: Print the no of security advisories
+#    - name: Print the no of affected hosts
 #      debug:
-#        msg: "Found {{ host_advisories.content | from_json | length }} security advisories for {{ insights_event_target_host }}"
+#        msg: "Found {{ affected_hosts.content | from_json | length }} affected hosts for advisory {{ advisory_id }}"
 
-#    - name: Print the security advisories
+#    - name: Print the affected hosts
 #      debug:
-#        var: host_advisories.content
+#        msg: "{{ affected_hosts.content }}"
 
-    - name: Generate remediation for target host
+    - name: Generate remediation for affected hosts
       uri:
           url: "{{ insights_api_url }}/remediations/v1/remediations"
           method: POST
@@ -46,10 +46,10 @@
             Connection: "keep-alive"
           body_format: json
           body:
-            name: "RHSA - {{ insights_event_target_host }} - {{ now() | string }}"
+            name: "RHSA - {{ advisory_id }} - {{ now() | string }}"
             auto_reboot: true
-            add: "{{ lookup('template','templates/remediation_host_body.j2') }}"
-      register: host_remediation
+            add: "{{ lookup('template','templates/remediation_advisory_body.j2') }}"
+      register: advisory_remediation
       vars:
-        host_advisory_ids: "{{ host_advisories.content | from_json | map(attribute='id') | list }}"
-        host_uuid: "{{ insights_event_target_host }}"
+        advisory_id: "{{ advisory_id }}"
+        host_uuids: "{{ affected_hosts.content | from_json | map(attribute='id') | list }}"
