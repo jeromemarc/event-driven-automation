@@ -17,6 +17,8 @@
             job_args:
               extra_vars:
                 insights_mal_data: "{{ event.payload.events }}"
+                insights_event_host_data: "{{ event.payload.context }}"
+                insights_event_target_host: "{{ event.payload.context.inventory_id }}"
 
     - name: EDA | Insights | New system registered
       condition: event.payload is defined and event.payload.event_type == 'new-system-registered'
@@ -30,7 +32,7 @@
                 insights_event_type: "{{ event.payload.event_type }}"
                 insights_event_data: "{{ event.payload.events }}"
                 insights_event_host_data: "{{ event.payload.context }}"
-                insights_event_target_host: "{{ event.payload.context.display_name }}"
+                insights_event_target_host: "{{ event.payload.context.inventory_id }}"
                 
     - name: EDA | Insights | Remediate Red Hat Insights Advisory with Ansible
       condition: event.payload is defined and event.payload.event_type == 'new-advisory'
@@ -44,4 +46,4 @@
                 insights_adv_type: "{{ event.payload.event_type }}"
                 insights_adv_data: "{{ event.payload.events }}"
                 insights_adv_host_data: "{{ event.payload.context }}"
-                insights_adv_target_host: "{{ event.payload.context.display_name }}"
+                insights_adv_target_host: "{{ event.payload.context.inventory_id }}"
