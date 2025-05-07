@@ -1,0 +1,67 @@
+---
+- name: Perform remediation using AAP
+  uri:
+      url: "{{ controller_api_url }}/projects/{{ controller_project_id }}/update"
+      method: POST
+      return_content: yes 
+      user: "{{ controller_username }}"
+      password: "{{ controller_password }}"
+      force_basic_auth: yes
+      validate_certs: yes
+      status_code: 202
+      headers:
+        Content-Type: "application/json"
+        accept: "application/json"
+        Connection: "keep-alive"
+      body_format: json
+      body:
+        id: "{{ controller_project_id }}"
+  register: project_update
+
+- name: Wait for project update to complete
+  pause:
+    seconds: 30
+
+- name: display playbook name
+  debug:
+    msg: "Playbook name: {{ remediation_name | lower | regex_replace(':', '') | regex_replace(' - ', '-') | regex_replace(' ', '-') | regex_replace('\\.', '') }}-{{ remediation_id }}.yml"
+
+- name: Create remediation job template
+  uri:
+      url: "{{ controller_api_url }}/job_templates/"
+      method: POST
+      return_content: yes 
+      user: "{{ controller_username }}"
+      password: "{{ controller_password }}"
+      force_basic_auth: yes
+      validate_certs: yes
+      status_code: 201
+      headers:
+        Content-Type: "application/json"
+        accept: "application/json"
+        Connection: "keep-alive"
+      body_format: json
+      body:
+        name: "{{ remediation_name }}"
+        job_type: "run"
+        project: "{{ controller_project_id }}"
+        inventory: "{{ controller_inventory_id }}"
+        creadentials: "{{ controller_credential_id }}"
+        playbook: "{{ remediation_name | lower | regex_replace(':', '') | regex_replace(' - ', '-') | regex_replace(' ', '-') | regex_replace('\\.', '') }}-{{ remediation_id }}.yml"
+  register: job_template
+
+- name: Launch remediation job template
+  uri:
+      url: "{{ controller_api_url }}/job_templates/{{ job_template.json.id }}/launch"
+      method: POST
+      return_content: yes 
+      user: "{{ controller_username }}"
+      password: "{{ controller_password }}"
+      force_basic_auth: yes
+      validate_certs: yes
+      status_code: 201
+      headers:
+        Content-Type: "application/json"
+        accept: "application/json"
+        Connection: "keep-alive"
+  register: job

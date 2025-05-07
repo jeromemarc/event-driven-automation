@@ -6,6 +6,12 @@
     insights_api_url: "https://console.redhat.com/api"
     insights_auth_user: "{{ rhsm_username }}"
     insights_auth_password: "{{ rhsm_password }}"
+    controller_api_url: "{{ controller_api_url }}"
+    controller_username: "{{ controller_username }}"
+    controller_password: "{{ controller_password }}"
+    controller_project_id: "{{ controller_project_id }}"
+    controller_inventory_id: "{{ controller_inventory_id }}"
+    controller_credential_id: "{{ controller_credential_id }}"
 
   tasks:        
     - name: Get list of affected hosts
@@ -30,6 +36,11 @@
       debug:
         msg: "{{ affected_hosts.content }}"
 
+    - name: Generate name for remediation
+      set_fact:
+        remediation_name: "RHSA - {{ advisory_id }} - {{ now() | string }}"
+      when: affected_hosts.content is defined and affected_hosts.content | from_json | length > 0
+
     - name: Generate remediation for affected hosts
       uri:
           url: "{{ insights_api_url }}/remediations/v1/remediations"
@@ -46,7 +57,7 @@
             Connection: "keep-alive"
           body_format: json
           body:
-            name: "RHSA - {{ advisory_id }} - {{ now() | string }}"
+            name: "{{ remediation_name }}"
             auto_reboot: true
             add: "{{ lookup('template','templates/remediation_advisory_body.j2') }}"
       register: advisory_remediation
@@ -54,3 +65,9 @@
         advisory_id: "{{ advisory_id }}"
         host_uuids: "{{ affected_hosts.content | from_json | map(attribute='id') | list }}"
       when: affected_hosts.content is defined and affected_hosts.content | from_json | length > 0
+
+    - name: Perform remediation using AAP
+      include_tasks: eda-playbook-insights-aap-remediation.yml
+      vars:
+        remediation_id: "{{ advisory_remediation.json.id }}"
+      when: advisory_remediation is defined and remediation_name is defined

@@ -6,11 +6,17 @@
     insights_api_url: "https://console.redhat.com/api"
     insights_auth_user: "{{ rhsm_username }}"
     insights_auth_password: "{{ rhsm_password }}"
+    controller_api_url: "{{ controller_api_url }}"
+    controller_username: "{{ controller_username }}"
+    controller_password: "{{ controller_password }}"
+    controller_project_id: "{{ controller_project_id }}"
+    controller_inventory_id: "{{ controller_inventory_id }}"
+    controller_credential_id: "{{ controller_credential_id }}"
 
   tasks:
-    - name: Wait for security advisorties to be available for new registered system
+    - name: Wait for security advisories to be available for new registered system
       pause:
-        seconds: 30
+        seconds: 60
 
     - name: Fetch security advisories for target host
       uri:
@@ -26,7 +32,7 @@
         status_code: 200,404
       register: host_advisories
       retries: 10
-      delay: 30
+      delay: 60
       until: host_advisories.status == 200
 
     - name: Print the no of security advisories
@@ -36,6 +42,11 @@
     - name: Print the security advisories
       debug:
         var: host_advisories.content
+
+    - name: Generate name for remediation
+      set_fact:
+        remediation_name: "RHSA - {{ insights_event_target_host }} - {{ now() | string }}"
+      when: host_advisories.content is defined and host_advisories.content | from_json | length > 0
 
     - name: Generate remediation for target host
       uri:
@@ -53,7 +64,7 @@
             Connection: "keep-alive"
           body_format: json
           body:
-            name: "RHSA - {{ insights_event_target_host }} - {{ now() | string }}"
+            name: "{{ remediation_name }}"
             auto_reboot: true
             add: "{{ lookup('template','templates/remediation_host_body.j2') }}"
       register: host_remediation
@@ -61,3 +72,9 @@
         host_advisory_ids: "{{ host_advisories.content | from_json | map(attribute='id') | list }}"
         host_uuid: "{{ insights_event_target_host }}"
       when: host_advisories.content is defined and host_advisories.content | from_json | length > 0
+
+    - name: Perform remediation using AAP
+      include_tasks: eda-playbook-insights-aap-remediation.yml
+      vars:
+        remediation_id: "{{ host_remediation.json.id }}"
+      when: host_remediation is defined and remediation_name is defined
