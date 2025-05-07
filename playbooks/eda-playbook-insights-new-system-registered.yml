@@ -7,7 +7,11 @@
     insights_auth_user: "{{ rhsm_username }}"
     insights_auth_password: "{{ rhsm_password }}"
 
-  tasks:        
+  tasks:
+    - name: Wait for security advisorties to be available for new registered system
+      pause:
+        seconds: 30
+
     - name: Fetch security advisories for target host
       uri:
         url: "{{ insights_api_url }}/patch/v3/export/systems/{{ insights_event_target_host }}/advisories?filter[advisory_type_name]=security"
