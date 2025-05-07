@@ -8,9 +8,9 @@
     insights_auth_password: "{{ rhsm_password }}"
 
   tasks:
-    - name: Wait for security advisorties to be available for new registered system
+    - name: Wait for security advisories to be available for new registered system
       pause:
-        seconds: 30
+        seconds: 60
 
     - name: Fetch security advisories for target host
       uri:
@@ -26,7 +26,7 @@
         status_code: 200,404
       register: host_advisories
       retries: 10
-      delay: 30
+      delay: 60
       until: host_advisories.status == 200
 
     - name: Print the no of security advisories
