@@ -19,8 +19,11 @@
         password: "{{ insights_auth_password }}"
         force_basic_auth: yes
         validate_certs: yes
-        status_code: 200
+        status_code: 200,404
       register: host_advisories
+      retries: 10
+      delay: 30
+      until: host_advisories.status == 200
 
     - name: Print the no of security advisories
       debug:
