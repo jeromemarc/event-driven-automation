@@ -11,7 +11,7 @@
     controller_password: "{{ controller_password }}"
     controller_project_id: "{{ controller_project_id }}"
     controller_inventory_id: "{{ controller_inventory_id }}"
-    controller_credential_id: "{{ controller_credential_id }}"
+    machine_credential_id: "{{ machine_credential_id }}"
 
   tasks:        
     - name: Get list of affected hosts

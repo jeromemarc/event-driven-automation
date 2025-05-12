@@ -46,7 +46,7 @@
         job_type: "run"
         project: "{{ controller_project_id }}"
         inventory: "{{ controller_inventory_id }}"
-        creadentials: "{{ controller_credential_id }}"
+        credentials: ["{{ machine_credential_id }}"]
         playbook: "{{ remediation_name | lower | regex_replace(':', '') | regex_replace(' - ', '-') | regex_replace(' ', '-') | regex_replace('\\.', '') }}-{{ remediation_id }}.yml"
   register: job_template
 
