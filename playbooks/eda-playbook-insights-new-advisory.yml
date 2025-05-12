@@ -58,7 +58,7 @@
           body_format: json
           body:
             name: "{{ remediation_name }}"
-            auto_reboot: true
+            auto_reboot: false
             add: "{{ lookup('template','templates/remediation_advisory_body.j2') }}"
       register: advisory_remediation
       vars:
