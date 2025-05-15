@@ -21,7 +21,7 @@
                 insights_event_target_host: "{{ event.payload.context.inventory_id }}"
 
     - name: EDA | Insights | New system registered
-      condition: event.payload is defined and event.payload.event_type == 'new-system-registered' and event.payload.events[0].payload.reporter != "cloud-connector"
+      condition: event.payload is defined and event.payload.event_type == 'new-system-registered' and event.payload.events[0].payload.reporter == "puptoo"
       actions:
         - debug:
         - run_job_template:
