@@ -1,2 +1,0 @@
-plugin: amazon.aws.aws_ec2
-allow_duplicated_hosts: False
