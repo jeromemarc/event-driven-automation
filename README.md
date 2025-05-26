@@ -1,4 +1,4 @@
-# Event-Driven Automation Demo
+# Red Hat Summit 2025 - Red Hat Insights + Event-Driven Ansible Demonstration
 
 # Overview
 This repository contains the demonstration example presented during the Red Hat Summit 2025 session on Proactive Remediations. It showcases how to implement automated remediation strategies using Event-Driven Ansible.
