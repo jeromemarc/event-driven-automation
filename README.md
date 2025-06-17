@@ -11,6 +11,7 @@ This repository contains the demonstration example presented during the Red Hat 
 * [Blog: Red Hat Insights Collection for Event-Driven Ansible](https://www.redhat.com/en/blog/red-hat-insights-collection-for-event-driven-ansible)
 * [Automation Hub collection: redhat.insights_eda](https://console.redhat.com/ansible/automation-hub/repo/published/redhat/insights_eda/)
 * [Product documentation: Integrating Event-Driven Ansible with the Red Hat Hybrid Cloud Console](https://docs.redhat.com/en/documentation/red_hat_insights/1-latest/html/integrating_the_red_hat_hybrid_cloud_console_with_third-party_applications/assembly-integrating-reporting_integrating-communications#assembly-configuring-integration-with-eda_integrating-communications)
+* [Knowledgebase article: Understanding Red Hat Insights Events and Notifications in the Hybrid Cloud Console](https://access.redhat.com/articles/7112807)
 * [Red Hat Insights Notifications - Event Samples](https://github.com/jeromemarc/insights-events-samples)
 * [eBook: Event-driven automation for IT Ops](https://www.redhat.com/en/engage/event-driven-automation-it-ops)
 * [eBook: Observability and Event-Driven Ansible](https://www.redhat.com/en/engage/observability-and-event-driven-ansible)
