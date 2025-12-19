@@ -30,7 +30,7 @@
 
     - name: Print the no of affected hosts
       debug:
-        msg: "Found {{ affected_hosts.content | from_json | length }} affected hosts for advisory {{ advisory_id }}"
+        msg: "Found {{ affected_hosts.content | from_json | length }} affected hosts for advisory {{ advisory_name }}"
 
     - name: Print the affected hosts
       debug:
@@ -38,7 +38,7 @@
 
     - name: Generate name for remediation
       set_fact:
-        remediation_name: "RHSA - {{ advisory_id }} - {{ now() | string }}"
+        remediation_name: "RHSA - {{ advisory_name }} - {{ now() | string }}"
       when: affected_hosts.content is defined and affected_hosts.content | from_json | length > 0
 
     - name: Generate remediation for affected hosts
@@ -62,7 +62,7 @@
             add: "{{ lookup('template','templates/remediation_advisory_body.j2') }}"
       register: advisory_remediation
       vars:
-        advisory_id: "{{ advisory_id }}"
+        advisory_name: "{{ advisory_name }}"
         host_uuids: "{{ affected_hosts.content | from_json | map(attribute='id') | list }}"
       when: affected_hosts.content is defined and affected_hosts.content | from_json | length > 0
 
