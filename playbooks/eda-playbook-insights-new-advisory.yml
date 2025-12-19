@@ -16,7 +16,7 @@
   tasks:        
     - name: Get list of affected hosts
       uri:
-        url: "{{ insights_api_url }}/patch/v3/export/advisories/{{ advisory_id }}/systems"
+        url: "{{ insights_api_url }}/patch/v3/export/advisories/{{ advisory_name }}/systems"
         method: GET
         return_content: yes
         headers:
